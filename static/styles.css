@@ -1,0 +1,15 @@
+nav .navbar-brand
+{
+    font-size: xx-large;
+}
+
+nav .navbar-brand .icon-size
+{
+    width: 45px;
+    height: 45px;
+}
+
+nav .navbar-brand .blue
+{
+    color: #537fbe;
+}
