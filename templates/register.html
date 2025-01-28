@@ -5,6 +5,9 @@
 {% endblock %}
 
 {% block main %}
+    <div class="mb-3 page-title">
+        <h3>Register:</h3>
+    </div>
     <form action="/register" method="post">
         <div class="mb-3">
             <input class="form-control mx-auto w-auto" autocomplete="off" autofocus name="username" type="text" placeholder="Username">
@@ -15,6 +18,8 @@
         <div class="mb-3">
             <input class="form-control mx-auto w-auto" name="confirm-password" type="password" placeholder="Confirm Password">
         </div>
-        <button class="btn btn-primary" type="submit">Register</button>
+        <div class="mb-3 text-center"> 
+            <button class="btn btn-primary" type="submit">Register</button>
+        </div> 
     </form>
 {% endblock %}

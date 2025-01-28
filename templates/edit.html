@@ -1,22 +1,23 @@
 {% extends "layout.html" %}
 
 {% block head %}
-    Add
+    Edit
 {% endblock %}
 
 {% block main %}
     <div class="mb-3 page-title">
-        <h3>Add new account:</h3>
+        <h3>Edit account:</h3>
     </div>
-    <form action="/add" method="post">
+    <form action="/edited" method="post">
+        <input hidden name="account_id" value="{{ account[0]['id'] }}">
         <div class="mb-3">
-            <input class="form-control mx-auto wide-input" autocomplete="off" autofocus name="company" type="text" placeholder="Company">
+            <input class="form-control mx-auto wide-input" autocomplete="off" autofocus name="company" type="text" placeholder="Company" value="{{ account[0]['company'] }}">
         </div>
         <div class="mb-3">
-            <input class="form-control mx-auto wide-input" autocomplete="off" name="username" type="text" placeholder="Username/Email">
+            <input class="form-control mx-auto wide-input" autocomplete="off" name="username" type="text" placeholder="Username/Email" value="{{ account[0]['username'] }}">
         </div>
         <div class="mb-3">
-            <input class="form-control mx-auto wide-input" id="password" name="password" type="password" placeholder="Password">
+            <input class="form-control mx-auto wide-input" id="password" name="password" type="password" placeholder="Password" value="{{ account[0]['password'] }}">
         </div>
         <div class="mb-3 text-center">
             <button class="btn btn-primary" type="button" onclick="generatePassword()">Generate Password</button>
@@ -42,7 +43,7 @@
             </script>
         </div>
         <div class="mb-3 text-center">
-            <button class="btn btn-primary" type="submit">Add Account</button>
+            <button class="btn btn-primary" type="submit">Save changes</button>
         </div>
     </form>
 {% endblock %}

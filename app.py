@@ -108,11 +108,11 @@ def add():
             return apology("Account already exists!")
         
         db.execute(
-            "INSERT INTO accounts (user_id, company, username, hash) VALUES (?, ?, ?, ?);",
+            "INSERT INTO accounts (user_id, company, username, password) VALUES (?, ?, ?, ?);",
             session["user_id"],
             company,
             username,
-            generate_password_hash(password)
+            password
         )
 
         flash("Account added successfully!")
@@ -149,7 +149,129 @@ def delete():
         db.execute("DELETE FROM accounts WHERE user_id = ? AND company = ? AND username = ?;", session["user_id"], company, username)
 
         flash("Account deleted successfully!")
-        return redirect("/")
+        password = request.form.get("password")
+        if not password:
+            return redirect("/")
+        return redirect("/myAccounts")
 
     companies = db.execute("SELECT company FROM accounts WHERE user_id = ?;", session["user_id"])
     return render_template("delete.html", companies=companies)
+
+
+@app.route("/myAccounts", methods=["GET", "POST"])
+@login_required
+def myAccounts():
+    if request.method == "POST":
+        company = request.form.get("company")
+        username = request.form.get("username")
+        password = request.form.get("password")
+
+        if not company and not username and not password:
+            accounts = db.execute(
+                "SELECT * FROM accounts WHERE user_id = ?;",
+                session["user_id"]
+            )
+        
+        elif not company and not username and password:
+            accounts = db.execute(
+                "SELECT * FROM accounts WHERE user_id = ? AND password = ?;", 
+                session["user_id"], 
+                password
+            )
+
+        elif not company and username and not password:
+            accounts = db.execute(
+                "SELECT * FROM accounts WHERE user_id = ? AND username = ?;", 
+                session["user_id"], 
+                username
+            )
+
+        elif not company and username and password:
+            accounts = db.execute(
+                "SELECT * FROM accounts WHERE user_id = ? AND username = ? AND password = ?;", 
+                session["user_id"], 
+                username,
+                password
+            )
+
+        elif company and not username and not password:
+            accounts = db.execute(
+                "SELECT * FROM accounts WHERE user_id = ? AND company = ?;", 
+                session["user_id"], 
+                str(company)
+            )
+
+        elif company and not username and password:
+            accounts = db.execute(
+                "SELECT * FROM accounts WHERE user_id = ? AND company = ? AND password = ?;", 
+                session["user_id"], 
+                str(company),
+                password
+            )
+        
+        elif company and username and not password:
+            accounts = db.execute(
+                "SELECT * FROM accounts WHERE user_id = ? AND company = ? AND username = ?;", 
+                session["user_id"], 
+                str(company),
+                username
+            )
+
+        else:
+            accounts = db.execute(
+                "SELECT * FROM accounts WHERE user_id = ? AND company = ? AND username = ? AND password = ?;", 
+                session["user_id"], 
+                str(company),
+                username,
+                password
+            )
+
+        if len(accounts) == 0:
+            return apology("No matched accounts!")
+
+        companies = db.execute("SELECT DISTINCT(company) FROM accounts WHERE user_id = ?;", session["user_id"])
+        return render_template("myAccounts.html", accounts=accounts, companies=companies, type="POST")
+
+    accounts = db.execute("SELECT * FROM accounts WHERE user_id = ?;", session["user_id"])
+    companies = db.execute("SELECT DISTINCT(company) FROM accounts WHERE user_id = ?;", session["user_id"])
+    return render_template("myAccounts.html", accounts=accounts, companies=companies, type="GET")
+
+
+@app.route("/edit", methods=["POST"])
+@login_required
+def edit():
+    account = db.execute("SELECT * FROM accounts WHERE id = ?;", request.form.get("account_id"))
+    return render_template("edit.html", account=account)
+
+
+@app.route("/edited", methods=["POST"])
+@login_required
+def edited():
+    company = request.form.get("company").upper()
+    if not company:
+        return apology("Missing company!")
+    
+    username = request.form.get("username")
+    if not username:
+        return apology("Missing username!")
+    
+    password = request.form.get("password")
+    if not password:
+        return apology("Missing password!")
+    
+    account_id = request.form.get("account_id")
+    account = db.execute("SELECT * FROM accounts WHERE id = ?", account_id)
+    row = db.execute("SELECT * FROM accounts WHERE user_id = ? AND company = ? AND username = ?;", session["user_id"], company, username)
+    if (len(row) != 0 and row != account) or (row == account and password == account[0]["password"]):
+        return apology("Account already exists!")
+    
+    db.execute (
+        "UPDATE accounts SET company = ?, username = ?, password = ? WHERE id = ?;",
+        company,
+        username,
+        password,
+        account_id
+    )
+
+    flash("Account editted successfully!")
+    return redirect("/myAccounts")

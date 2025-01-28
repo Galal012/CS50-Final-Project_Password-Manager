@@ -5,6 +5,9 @@
 {% endblock %}
 
 {% block main %}
+    <div class="mb-3 page-title">
+        <h3>Delete account:</h3>
+    </div>
     <form action="/delete" method="post">
         <div class="mb-3">
             <select class="form-control mx-auto wide-select" autofocus name="company">
@@ -17,7 +20,7 @@
         <div class="mb-3">
             <input class="form-control mx-auto w-auto" autocomplete="off" name="username" type="text" placeholder="Username/Email">
         </div>
-        <div class="mb-3">
+        <div class="mb-3 text-center">
             <button class="btn btn-primary" type="submit">Delete Account</button>
         </div>
     </form>

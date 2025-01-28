@@ -5,6 +5,9 @@
 {% endblock %}
 
 {% block main %}
+    <div class="mb-3 page-title">
+        <h3>Log In:</h3>
+    </div>
     <form action="/login" method="post">
         <div class="mb-3">
             <input class="form-control mx-auto w-auto" autocomplete="off" autofocus name="username" type="text" placeholder="Username">
@@ -12,6 +15,8 @@
         <div class="mb-3">
             <input class="form-control mx-auto w-auto" name="password" type="password" placeholder="Password">
         </div>
-        <button class="btn btn-primary" type="submit">Log In</button>
+        <div class="mb-3 text-center">
+            <button class="btn btn-primary" type="submit">Log In</button>
+        </div>
     </form>
 {% endblock %}

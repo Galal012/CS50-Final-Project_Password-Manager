@@ -28,3 +28,56 @@ nav .navbar-brand .blue
 {
     width: 15.8%;
 }
+
+.page-title
+{
+    color: #466AFF;
+    text-decoration: underline;
+}
+
+table 
+{
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td 
+{
+    border: 1px solid black;
+    padding: 8px;
+    text-align: left;
+}
+
+th 
+{
+    background-color: #f2f2f2;
+}
+
+.horizontal-form
+{
+    display: flex; gap: 20px;
+}
+
+.button-right
+{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.btn-green
+{
+    background-color: #535353;
+    color: white;
+}
+
+.btn-red
+{
+    background-color: #f44336;
+    color: white;
+}
+
+.center-button 
+{
+    text-align: center;
+}

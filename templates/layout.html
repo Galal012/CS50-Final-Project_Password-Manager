@@ -29,9 +29,8 @@
                     {% if session["user_id"] %}
                     <ul class="navbar-nav me-auto mt-2">
                         <li class="nav-item"><a class="nav-link" href="/myAccounts">My Accounts</a></li>
-                        <li class="nav-item"><a class="nav-link" href="/edit">Edit</a></li>
-                        <li class="nav-item"><a class="nav-link" href="/add">Add</a></li>
-                        <li class="nav-item"><a class="nav-link" href="/delete">Delete</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/add">Add Account</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/delete">Delete Account</a></li>
                     </ul>
                     <ul class="navbar-nav ms-auto mt-2">
                         <li class="nav-item"><a class="nav-link" href="/settings">Settings</a></li>
@@ -55,7 +54,7 @@
             </header>
         {% endif %}
         
-        <main class="container py-5 text-center">
+        <main class="container py-5">
             {% block main %}{% endblock %}
         </main>
 
