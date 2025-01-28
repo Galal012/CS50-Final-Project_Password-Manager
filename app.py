@@ -1,9 +1,12 @@
 from cs50 import SQL
-from flask import Flask, flash, redirect, render_template, request, session
+from flask import Flask, flash, redirect, render_template, request, session, jsonify
 from flask_session import Session
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from helpers import apology
+from helpers import apology, login_required
+
+import secrets
+import string
 
 app = Flask(__name__)
 
@@ -24,6 +27,7 @@ def after_request(response):
 
 
 @app.route("/")
+@login_required
 def index():
     return render_template("index.html")
 
@@ -52,3 +56,74 @@ def register():
         return redirect("/login")
 
     return render_template("register.html")
+
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    if request.method == "POST":
+        session.clear()
+
+        username = request.form.get("username")
+        if not username:
+            return apology("Missing username!")
+        
+        password = request.form.get("password")
+        if not password:
+            return apology("Missing password!")
+        
+        row = db.execute("SELECT * FROM users WHERE username = ?;", username)
+        if len(row) != 1 or not check_password_hash(row[0]["hash"], password):
+            return apology("invalid username and/or password")
+        
+        session["user_id"] = row[0]["id"]
+        return redirect("/")
+    
+    return render_template("login.html")
+
+
+@app.route("/logout")
+def logout():
+    session.clear()
+    return redirect("/")
+
+
+@app.route("/add", methods=["GET", "POST"])
+@login_required
+def add():
+    if request.method == "POST":
+        company = request.form.get("company").upper()
+        if not company:
+            return apology("Missing company!")
+        
+        username = request.form.get("username")
+        if not username:
+            return apology("Missing username!")
+        
+        password = request.form.get("password")
+        if not password:
+            return apology("Missing password!")
+        
+        row = db.execute("SELECT * FROM accounts WHERE company = ? AND username = ?;", company, username)
+        if len(row) != 0:
+            return apology("Account already exists!")
+        
+        db.execute(
+            "INSERT INTO accounts (user_id, company, username, hash) VALUES (?, ?, ?, ?);",
+            session["user_id"],
+            company,
+            username,
+            generate_password_hash(password)
+        )
+
+        flash("Account added successfully!")
+        return redirect("/")
+
+    return render_template("add.html")
+
+
+@app.route('/generate_password')
+def generate_password():
+    length = 12
+    characters = string.ascii_letters + string.digits + string.punctuation
+    password = ''.join(secrets.choice(characters) for i in range(length))
+    return jsonify(password=password)
