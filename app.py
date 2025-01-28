@@ -103,7 +103,7 @@ def add():
         if not password:
             return apology("Missing password!")
         
-        row = db.execute("SELECT * FROM accounts WHERE company = ? AND username = ?;", company, username)
+        row = db.execute("SELECT * FROM accounts WHERE user_id = ? AND company = ? AND username = ?;", session["user_id"], company, username)
         if len(row) != 0:
             return apology("Account already exists!")
         
@@ -127,3 +127,29 @@ def generate_password():
     characters = string.ascii_letters + string.digits + string.punctuation
     password = ''.join(secrets.choice(characters) for i in range(length))
     return jsonify(password=password)
+
+
+@app.route("/delete", methods=["GET", "POST"])
+@login_required
+def delete():
+    if request.method == "POST":
+        company = request.form.get("company")
+        if not company:
+            return apology("Missing company!")
+        company = str(company)
+        
+        username = request.form.get("username")
+        if not username:
+            return apology("Missing username!")
+        
+        row = db.execute("SELECT * FROM accounts WHERE user_id = ? AND company = ? AND username = ?;", session["user_id"], company, username)
+        if len(row) == 0:
+            return apology("Account does not exist!")
+        
+        db.execute("DELETE FROM accounts WHERE user_id = ? AND company = ? AND username = ?;", session["user_id"], company, username)
+
+        flash("Account deleted successfully!")
+        return redirect("/")
+
+    companies = db.execute("SELECT company FROM accounts WHERE user_id = ?;", session["user_id"])
+    return render_template("delete.html", companies=companies)

@@ -1,0 +1,24 @@
+{% extends "layout.html" %}
+
+{% block head %}
+    Delete
+{% endblock %}
+
+{% block main %}
+    <form action="/delete" method="post">
+        <div class="mb-3">
+            <select class="form-control mx-auto wide-select" autofocus name="company">
+                <option disabled selected value="">Company</option>
+                {% for company in companies %}
+                    <option value="{{ company['company'] }}">{{ company['company'] }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="mb-3">
+            <input class="form-control mx-auto w-auto" autocomplete="off" name="username" type="text" placeholder="Username/Email">
+        </div>
+        <div class="mb-3">
+            <button class="btn btn-primary" type="submit">Delete Account</button>
+        </div>
+    </form>
+{% endblock %}
