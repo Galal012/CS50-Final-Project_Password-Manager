@@ -5,89 +5,98 @@
 {% endblock %}
 
 {% block main %}
-    <div class="mb-3 page-title">
-        <h3>Filter the accounts:</h3>
-    </div>
-    <div class="mb-3">
-        <form class="horizontal-form" action="/myAccounts" method="post">
-            <select class="form-control w-auto" name="company">
-                <option disabled selected value="">Company</option>
-                {% for company in companies %}
-                    <option value="{{ company['company'] }}">{{ company['company'] }}</option>
-                {% endfor %}
-            </select>
-            <input class="form-control w-auto" autocomplete="off" name="username" type="text" placeholder="Username/Email">
-            <input class="form-control w-auto" name="password" type="password" placeholder="Password">
-            <button class="btn btn-primary" type="submit">Search</button>
-        </form>
-    </div>
-    <div class="mb-3 page-title">
-        {% if type == "POST" %}
-            <h3>Matched accounts:</h3>
-        {% else %}
-            <h3>All accounts: </h3>
-        {% endif %}
-    </div>
-    <div class="mb-3">
-        <table>
-            <thead>
-                <tr>
-                    <th>Company</th>
-                    <th>Username/Email</th>
-                    <th>Password</th>
-                    <th>Edit Account</th>
-                    <th>Delete Account</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for account in accounts %}
+    {% if size == 0 %}
+        <div class="mb-3 text-center red">
+            <h1>No Accounts Yet!</h1>
+        </div>
+        <div class="mb-3 text-center">
+            <a class="nav-link" href="/add"><button class="btn btn-primary" type="button">Add new account</button></a>
+        </div>
+    {% else %}
+        <div class="mb-3 page-title">
+            <h3>Filter the accounts:</h3>
+        </div>
+        <div class="mb-3">
+            <form class="horizontal-form" action="/myAccounts" method="post">
+                <select class="form-control w-auto" name="company">
+                    <option disabled selected value="">Company</option>
+                    {% for company in companies %}
+                        <option value="{{ company['company'] }}">{{ company['company'] }}</option>
+                    {% endfor %}
+                </select>
+                <input class="form-control w-auto" autocomplete="off" name="username" type="text" placeholder="Username/Email">
+                <input class="form-control w-auto" name="password" type="password" placeholder="Password">
+                <button class="btn btn-primary" type="submit">Search</button>
+            </form>
+        </div>
+        <div class="mb-3 page-title">
+            {% if type == "POST" %}
+                <h3>Matched accounts:</h3>
+            {% else %}
+                <h3>All accounts: </h3>
+            {% endif %}
+        </div>
+        <div class="mb-3">
+            <table>
+                <thead>
                     <tr>
-                        <td>{{ account["company"] }}</td>
-                        <td>{{ account["username"] }}</td>
-                        <td class="button-right">
-                            <input class="password" type="password" value="{{ account['password'] }}" readonly>
-                            <div>
-                                <button class="btn btn-primary btn-green" type="button" onclick="copyPassword(this)">Copy</button>
-                                <button class="btn btn-primary btn-green" type="button" onclick="togglePassword(this)">Show</button>
-                            </div>
-                        </td>
-                        <td class="center-button">
-                            <form action="/edit" method="post">
-                                <input hidden name="account_id" value="{{ account['id'] }}">
-                                <button class="btn btn-primary" type="submit">Edit</button>
-                            </form>
-                        </td>
-                        <td class="center-button">
-                            <form action="/delete " method="post">
-                                <input hidden name="company" value="{{ account['company'] }}">
-                                <input hidden name="username" value="{{ account['username'] }}">
-                                <input hidden name="password" value="{{ account['password'] }}">
-                                <button class="btn btn-primary btn-red" type="submit">Delete</button>
-                            </form>
-                        </td>
-
-                        <script>
-                            function togglePassword(button) {
-                                var passwordInput = button.parentElement.previousElementSibling;
-                                if (passwordInput.type === "password") {
-                                    passwordInput.type = "text";
-                                    button.textContent = "Hide";
-                                } else {
-                                    passwordInput.type = "password";
-                                    button.textContent = "Show";
-                                }
-                            }
-
-                            function copyPassword(button) {
-                                var passwordInput = button.parentElement.previousElementSibling;
-                                passwordInput.select();
-                                document.execCommand("copy");
-                                alert('Password copied to clipboard');
-                            }
-                        </script>
+                        <th>Company</th>
+                        <th>Username/Email</th>
+                        <th>Password</th>
+                        <th>Edit Account</th>
+                        <th>Delete Account</th>
                     </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
+                </thead>
+                <tbody>
+                    {% for account in accounts %}
+                        <tr>
+                            <td>{{ account["company"] }}</td>
+                            <td>{{ account["username"] }}</td>
+                            <td class="button-right">
+                                <input class="password" type="password" value="{{ account['password'] }}" readonly>
+                                <div>
+                                    <button class="btn btn-primary btn-green" type="button" onclick="copyPassword(this)">Copy</button>
+                                    <button class="btn btn-primary btn-green" type="button" onclick="togglePassword(this)">Show</button>
+                                </div>
+                            </td>
+                            <td class="center-button">
+                                <form action="/edit" method="post">
+                                    <input hidden name="account_id" value="{{ account['id'] }}">
+                                    <button class="btn btn-primary" type="submit">Edit</button>
+                                </form>
+                            </td>
+                            <td class="center-button">
+                                <form action="/delete " method="post">
+                                    <input hidden name="company" value="{{ account['company'] }}">
+                                    <input hidden name="username" value="{{ account['username'] }}">
+                                    <input hidden name="password" value="{{ account['password'] }}">
+                                    <button class="btn btn-primary btn-red" type="submit">Delete</button>
+                                </form>
+                            </td>
+
+                            <script>
+                                function togglePassword(button) {
+                                    var passwordInput = button.parentElement.previousElementSibling;
+                                    if (passwordInput.type === "password") {
+                                        passwordInput.type = "text";
+                                        button.textContent = "Hide";
+                                    } else {
+                                        passwordInput.type = "password";
+                                        button.textContent = "Show";
+                                    }
+                                }
+
+                                function copyPassword(button) {
+                                    var passwordInput = button.parentElement.previousElementSibling;
+                                    passwordInput.select();
+                                    document.execCommand("copy");
+                                    alert('Password copied to clipboard');
+                                }
+                            </script>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
 {% endblock %}

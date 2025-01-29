@@ -10,13 +10,26 @@
     </div>
     <form action="/register" method="post">
         <div class="mb-3">
-            <input class="form-control mx-auto w-auto" autocomplete="off" autofocus name="username" type="text" placeholder="Username">
+            <input class="form-control mx-auto w-auto" autocomplete="off" autofocus name="name" type="text" placeholder="Name">
+        </div>
+        <div class="mb-3">
+            <input class="form-control mx-auto w-auto" autocomplete="off" name="phone" type="text" placeholder="Phone Number">
+        </div>
+        <div class="mb-3">
+            <input class="form-control mx-auto w-auto" autocomplete="off" name="username" type="text" placeholder="Username">
         </div>
         <div class="mb-3">
             <input class="form-control mx-auto w-auto" name="password" type="password" placeholder="Password">
         </div>
         <div class="mb-3">
             <input class="form-control mx-auto w-auto" name="confirm-password" type="password" placeholder="Confirm Password">
+        </div>
+        <div class="mb-3">
+            <select class="form-control mx-auto wide-select" name="gender">
+                <option disabled selected value="">Gender</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+            </select>
         </div>
         <div class="mb-3 text-center"> 
             <button class="btn btn-primary" type="submit">Register</button>

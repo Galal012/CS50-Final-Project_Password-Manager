@@ -1,0 +1,63 @@
+{% extends "layout.html" %}
+
+{% block head %}
+    Settings
+{% endblock %}
+
+{% block main %}
+    <div class="mb-3 page-title">
+        <h1>Settings:</h1>
+    </div>
+    <div class="mb-3">
+        <h3>Personal Details</h3>
+    </div>
+    <div class="mb-3">
+        <form action="/settings" method="post">
+            <div class="mb-3 d-flex align-items-center justify-content-center">
+                <label for="name" class="me-4 label-width">Name:</label>
+                <input class="form-control w-auto" id="name" autocomplete="off" name="name" type="text" placeholder="Name" value="{{ info['name'] }}" readonly>
+            </div>
+            <div class="mb-3 d-flex align-items-center justify-content-center">
+                <label for="phone" class="me-4 label-width">Phone Number:</label>
+                <input class="form-control w-auto" id="phone" autocomplete="off" name="phone" type="text" placeholder="Phone Number" value="{{ info['phone'] }}" readonly>
+            </div>
+            <div class="mb-3 d-flex align-items-center justify-content-center">
+                <label for="username" class="me-4 label-width">Username:</label>
+                <input class="form-control w-auto" id="username" autocomplete="off" name="username" type="text" placeholder="Username" value="{{ info['username'] }}" readonly>
+            </div>
+            <div class="mb-3 d-flex align-items-center justify-content-center">
+                <label for="gender" class="me-4 label-width">Gender:</label>
+                <select class="form-control wide-select" id="gender" name="gender" disabled>
+                    <option id="option1" disabled selected value="">{{ info["gender"] }}</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                </select>
+            </div>
+            <div class="mb-3 text-center"> 
+                <button class="btn btn-primary me-2" id="edittor" type="button">Edit</button>
+                <button class="btn btn-primary" id="submittor" type="submit" hidden>Save Changes</button>
+            </div>
+            <div class="mb-3 text-center"> 
+                <a class="nav-link" href="/changePassword"><button class="btn btn-primary" id="passChanger" type="button" hidden>Change Password</button></a>
+            </div>
+        </form>
+
+        <script>
+            document.querySelector('#edittor').addEventListener('click', function() {
+                document.querySelector('#name').removeAttribute('readonly');
+                document.querySelector('#phone').removeAttribute('readonly');
+                document.querySelector('#username').removeAttribute('readonly');
+                document.querySelector('#gender').removeAttribute('disabled');
+
+                let submittor = document.querySelector('#submittor');
+                submittor.removeAttribute('hidden')
+
+                let passChanger = document.querySelector('#passChanger');
+                passChanger.removeAttribute('hidden')
+
+                let option = document.querySelector('#option1');
+                option.innerHTML = 'Gender';
+            });
+        </script>
+    </div>
+{% endblock %}

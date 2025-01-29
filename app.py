@@ -35,6 +35,14 @@ def index():
 @app.route("/register", methods = ["GET", "POST"])
 def register():
     if request.method == "POST":
+        name = request.form.get("name")
+        if not name:
+            return apology("Missing name!")
+        
+        phone = request.form.get("phone")
+        if not phone:
+            return apology("Missing phone number!")
+
         username = request.form.get("username")
         if not username:
             return apology("Missing username!")
@@ -51,7 +59,19 @@ def register():
         if password != confirmation:
             return apology("Passwords does not match!")
         
-        db.execute("INSERT INTO users (username, hash) VALUES (?, ?);", username, generate_password_hash(password))
+        gender = request.form.get("gender")
+        if not gender:
+            return apology("Missing gender!")
+        gender = str(gender)
+        
+        db.execute(
+            "INSERT INTO users (username, hash, name, phone, gender) VALUES (?, ?, ?, ?, ?);",
+            username,
+            generate_password_hash(password),
+            name,
+            phone,
+            gender
+        )
 
         return redirect("/login")
 
@@ -234,7 +254,7 @@ def myAccounts():
 
     accounts = db.execute("SELECT * FROM accounts WHERE user_id = ?;", session["user_id"])
     companies = db.execute("SELECT DISTINCT(company) FROM accounts WHERE user_id = ?;", session["user_id"])
-    return render_template("myAccounts.html", accounts=accounts, companies=companies, type="GET")
+    return render_template("myAccounts.html", accounts=accounts, companies=companies, type="GET", size=len(accounts))
 
 
 @app.route("/edit", methods=["POST"])
@@ -275,3 +295,78 @@ def edited():
 
     flash("Account editted successfully!")
     return redirect("/myAccounts")
+
+
+@app.route("/settings", methods=["GET", "POST"])
+@login_required
+def settings():
+    if request.method == "POST":
+        name = request.form.get("name")
+        if not name:
+            return apology("Missing name!")
+        
+        phone = request.form.get("phone")
+        if not phone:
+            return apology("Missing phone number!")
+
+        username = request.form.get("username")
+        if not username:
+            return apology("Missing username!")
+        
+        account = db.execute("SELECT * FROM users WHERE id = ?;", session["user_id"])[0]
+        row = db.execute("SELECT * FROM users WHERE username = ?;", username)
+        if len(row) == 1 and username != account["username"]:
+            return apology("Username already exists!")
+        
+        gender = request.form.get("gender")
+        if not gender:
+            return apology("Missing gender!")
+        gender = str(gender)
+
+        if account["name"] == name and account["phone"] == phone and account["username"] == username and account["gender"] == gender:
+            return apology("No changes occured!")
+        
+        db.execute(
+            "UPDATE users SET name = ?, phone = ?, username = ?, gender = ? WHERE id = ?;",
+            name,
+            phone,
+            username,
+            gender,
+            session["user_id"]
+        )
+
+        flash("Changes saved successfully!")
+        return redirect("/")
+
+    details = db.execute("SELECT * FROM users WHERE id = ?;", session["user_id"])
+    return render_template("settings.html", info=details[0])
+
+
+@app.route("/changePassword", methods=["GET", "POST"])
+@login_required
+def changePassword():
+    if request.method == "POST":
+        oldpass = request.form.get("old-password")
+        newpass = request.form.get("new-password")
+        confirmpass = request.form.get("confirm-new-password")
+
+        if not oldpass or not newpass or not confirmpass:
+            return apology("Missing password!")
+        
+        row = db.execute("SELECT * FROM users WHERE id = ?;", session["user_id"])
+        if not check_password_hash(row[0]["hash"], oldpass):
+            return apology("Incorrect old password!")
+        
+        if newpass != confirmpass:
+            return apology("New passwords does not match!")
+        
+        db.execute(
+            "UPDATE users SET hash = ? WHERE id = ?;",
+            generate_password_hash(newpass),
+            session["user_id"]
+        )
+
+        flash("Password changed successfully!")
+        return redirect("/")
+
+    return render_template("changePassword.html")
