@@ -1,9 +1,88 @@
 {% extends "layout.html" %}
 
 {% block head %}
-    Index
+    Home
 {% endblock %}
 
-{% block main %}
-    <h1>Hey Iam Here.</h1>
+{% block homepage %}
+    <div class="user-greeting">
+        Welcome, {{ name }}!
+    </div>
+
+    <section class="hero bg-light py-5">
+        <div class="container text-center">
+            <h1 class="display-4">Secure Your Digital Life with Ease</h1>
+            <p class="lead">Store, generate, and manage your passwords securely.</p>
+            {% if not session["user_id"] %}
+                <div class="mt-4">
+                    <a href="/register" class="btn btn-primary btn-lg me-2">Get Started</a>
+                    <a href="/login" class="btn btn-outline-primary btn-lg">Log In</a>
+                </div>
+            {% endif %}
+        </div>
+    </section>
+
+    <section class="features py-5">
+        <div class="container">
+            <div class="row text-center">
+                <div class="col-md-4">
+                    <div class="feature-card p-4">
+                        <img src="/static/secure-storage-icon.jpg" alt="Secure Storage" class="mb-3" height="70">
+                        <h3>Secure Storage</h3>
+                        <p>Store all your passwords securely in one place.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-card p-4">
+                        <img src="/static/password-generator-icon.png" alt="Password Generator" class="mb-3" height="70">
+                        <h3>Password Generator</h3>
+                        <p>Generate strong, unique passwords for each account.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-card p-4">
+                        <img src="/static/easy-access-icon.png" alt="Easy Access" class="mb-3" height="70">
+                        <h3>Easy Access</h3>
+                        <p>Access your passwords anytime, anywhere.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="how-it-works bg-light py-5">
+        <div class="container text-center">
+            <h2 class="mb-5">How It Works</h2>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="step p-3">
+                        <span class="badge bg-primary rounded-circle p-3">1</span>
+                        <h3 class="mt-3">Register</h3>
+                        <p>Create an account to get started.</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="step p-3">
+                        <span class="badge bg-primary rounded-circle p-3">2</span>
+                        <h3 class="mt-3">Add Accounts</h3>
+                        <p>Store your accounts and passwords securely.</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="step p-3">
+                        <span class="badge bg-primary rounded-circle p-3">3</span>
+                        <h3 class="mt-3">Manage</h3>
+                        <p>Edit or delete accounts as needed.</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="step p-3">
+                        <span class="badge bg-primary rounded-circle p-3">4</span>
+                        <h3 class="mt-3">Generate Passwords</h3>
+                        <p>Use our password generator for strong, unique passwords.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 {% endblock %}

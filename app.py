@@ -27,9 +27,11 @@ def after_request(response):
 
 
 @app.route("/")
-@login_required
 def index():
-    return render_template("index.html")
+    name = "User"
+    if session.get("user_id") is not None:
+        name = db.execute("SELECT * FROM users WHERE id = ?;", session["user_id"])[0]["name"]
+    return render_template("index.html", name=name)
 
 
 @app.route("/register", methods = ["GET", "POST"])

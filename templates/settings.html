@@ -28,9 +28,9 @@
             <div class="mb-3 d-flex align-items-center justify-content-center">
                 <label for="gender" class="me-4 label-width">Gender:</label>
                 <select class="form-control wide-select" id="gender" name="gender" disabled>
-                    <option id="option1" disabled selected value="">{{ info["gender"] }}</option>
-                    <option value="male">Male</option>
-                    <option value="female">Female</option>
+                    <option id="option1" selected disabled value="">{{ info["gender"] }}</option>
+                    <option id="option2" value="Male">Male</option>
+                    <option id="option3" value="Female">Female</option>
                 </select>
             </div>
             <div class="mb-3 text-center"> 
@@ -43,6 +43,8 @@
         </form>
 
         <script>
+            const info = {{ info|tojson|safe }};
+            
             document.querySelector('#edittor').addEventListener('click', function() {
                 document.querySelector('#name').removeAttribute('readonly');
                 document.querySelector('#phone').removeAttribute('readonly');
@@ -55,8 +57,20 @@
                 let passChanger = document.querySelector('#passChanger');
                 passChanger.removeAttribute('hidden')
 
-                let option = document.querySelector('#option1');
-                option.innerHTML = 'Gender';
+                let option1 = document.querySelector('#option1');
+                option1.innerHTML = 'Gender';
+                option1.removeAttribute('selected')
+
+                let option2 = document.querySelector('#option2');
+                let option3 = document.querySelector('#option3');
+                if (info.gender === "Male") {
+                    option2.setAttribute('selected', '')
+                    option3.removeAttribute('selected')
+                }
+                else {
+                    option3.setAttribute('selected', '')
+                    option2.removeAttribute('selected')
+                }
             });
         </script>
     </div>
